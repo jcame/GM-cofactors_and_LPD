@@ -1,5 +1,8 @@
 # GM-cofactors_and_LPD
 
+This is a general description of the code used to analyze: Gut microbiome and its cofactors are linked to lipoprotein distribution profiles
+The intermediate data-blocks in which this code lines have been applied are available on request from the corresponding authors
+
 ## Figure 2A
 
     library(gplots)
