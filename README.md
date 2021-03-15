@@ -36,8 +36,13 @@
 
 
 ## Figure 3A
+    cor.test(X,Y, method = "spearman")
 
 ## Figure 3B
+    library(ggplot2)
+    ggplot(matrix1, aes(type,species, color= type)) + geom_boxplot(aes(colour = type)) + geom_jitter(aes(colour = type),width = 0.2) + scale_color_manual(values=c("dodgerblue4","lightskyblue3","tomato1")) + theme_classic()
+
+
 
 ## Figure 3C
     library(ggplot2)
@@ -51,9 +56,18 @@
 
 
 
-
-
 ## Figure 3D
+
+
+
+
+## Figure 3E
+    library(vegan)
+    adonis(GMsX ~ GMsY$type, method = "canberra")
+    adonis(KOsX ~ GMsY$type, method = "canberra")
+
+
+
 
 
 
