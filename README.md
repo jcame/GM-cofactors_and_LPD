@@ -210,11 +210,51 @@ For zOTUs & KO counts matrices
 
 
 
-## Figure 4C
+## Figure 4G|H
+
+zOTUs (randomForest selected) vs LPDs
+
+    cor <- rcorr(as.matrix(X), as.matrix(Y), type="spearman")
+
+    correction <- (p.adjust(cor$P, method = "fdr")) < 0.05
+    corrected <- correction
+
+    corrected[corrected==TRUE] = 1
+
+    new <-  corrected*cor$r
+
+    new1 <- new[,-c(1:206)]
+    new2 <- new1[-c(207:260),]
+    cclean <- (colSums(new2, na.rm=T) != 0)
+    new3 <- new2[, cclean] 
+    rclean <- (rowSums(new3, na.rm=T) != 0)
+    new4 <- new3[rclean,] 
+
+    heatmap <- heatmap.2(t(new4), Rowv = T, Colv = T, dendrogram ="both", col = colorRampPalette(c('red4','red2','coral1','white','gray90','royalblue2','royalblue4'))(1000), key = T, keysize = 1.0, density.info = "none", trace ="none", na.color = NA, margins = c(8,30))
 
 
-## Figure 4F
+KOs (randomForest selected) vs LPDs
 
+    cor <- rcorr(as.matrix(Z), as.matrix(Y), type="spearman")
+
+
+    correction <- (p.adjust(cor$P, method = "fdr")) < 0.05
+    corrected <- correction
+
+    corrected[corrected==TRUE] = 1
+
+    new <-  corrected*cor$r
+
+    new1 <- new[,-c(1:55)]
+    new2 <- new1[-c(56:109),]
+    cclean <- (colSums(new2, na.rm=T) != 0)
+    new3 <- new2[, cclean] 
+    rclean <- (rowSums(new3, na.rm=T) != 0)
+    new4 <- new3[rclean,] 
+
+
+
+    heatmap <- heatmap.2(new4, Rowv = T, Colv = T, dendrogram ="both", col = colorRampPalette(c('red4','red2','white','deepskyblue1','blue4'))(1000), key = T, keysize = 1.0, density.info = "none", trace ="none", na.color = NA, margins = c(8,30))
 
 
 
