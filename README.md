@@ -73,7 +73,124 @@ For zOTUs & KO counts matrices
     
     #Varible selection based on RandomForest
 
+    echo '#!/usr/bin/env Rscript
 
+    calm <- read.table("dataset.txt",header=TRUE)
+    seed_numbers <- sample(1:100000, 1)
+    set.seed(seed_numbers)
+
+
+    A <- subset(calm, type == "Cluster1")
+    C <- subset(calm, type == "Cluster2")
+
+
+    s_A <- sample(82,57)
+    s_C <- sample(67,47)
+
+
+    A_train <- A[s_A,]
+    A_test <- A[-s_A,]
+    C_train <- C[s_C,]
+    C_test <- C[-s_C,]
+
+
+    train0 <- rbind(A_train,C_train)
+    test0 <- rbind(A_test,C_test)
+    write.table(test0, "test_set.txt", sep="\t", row.names=FALSE, quote =F)
+    write.table(train0, "training_set.txt", sep="\t", row.names=FALSE, quote =F)
+
+
+
+    calm <- read.table("training_set.txt",header=TRUE)
+    train <-  calm[,-c(1)]
+
+    seed_numbers <- sample(1:100000, 1)
+    set.seed(seed_numbers)
+    library(party)
+    iris.cf <- cforest(type ~ ., data = train, control = cforest_unbiased(ntree = 6000))
+    vi <- varimp(iris.cf, nperm = 10)
+    write.table(vi, "decision.txt", sep="\t",quote =F) ' > cforest.R
+
+    chmod 755 cforest.R
+    ./cforest.R
+    rm cforest.R
+
+    TAB=$'\t'
+    sed 1d decision.txt > decision1.txt
+    echo "variable${TAB}MDA" > header.txt
+    cat header.txt decision1.txt > Party-MDA.txt
+    rm decision.txt
+    rm decision1.txt
+    rm header.txt
+
+    #########################################################################
+
+    echo '#!/usr/bin/env Rscript
+
+    seed_numbers <- sample(1:100000, 1)
+    set.seed(seed_numbers)
+    library(randomForest)
+
+    train0<- read.table("training_set.txt",header=TRUE)
+    test0 <- read.table("test_set.txt",header=TRUE)
+    train <-  train0[,-c(1)]
+    test <-  test0[,-c(1)]
+
+
+    X <-read.table("Party-MDA.txt",header=TRUE)
+    Xs = X[X$MDA>0, ]
+    names = as.vector(Xs$variable)
+
+    train.1 <- train[,names] 
+    type <- train$type
+    train_1 <- cbind(type,train.1)
+
+    test.1 <- test[,names] 
+    type <- test$type
+    test_1 <- cbind(type,test.1)
+
+    GM.rf_1 <- randomForest(x=train_1[-1], y=train_1$type, data = train_1, importance = TRUE, proximity = TRUE, ntree= 6000, sampsize=c(47,47), nPerm=1000, iter=1000)
+    p <- predict (GM.rf_1, test_1)
+    print <- mean(test_1[,1]==p)
+    write.table(print, "prediction.txt", sep="\t",quote =F)' > randomForest.R
+
+    chmod 755 randomForest.R
+    ./randomForest.R
+    rm randomForest.R
+
+    sed 1d prediction.txt > 1.txt
+    cut -f2 1.txt > 2.txt
+    mv 2.txt prediction_${dir}.txt
+    rm 1.txt
+    rm prediction.txt
+
+
+    #########################################################################
+
+
+    echo '#!/usr/bin/env Rscript
+
+    calm <- read.table("dataset.txt",header=TRUE)
+    #train <-  calm[,-c(1)]
+
+    X <-read.table("Party-MDA.txt",header=TRUE)
+    Xs = X[X$MDA>0, ]
+    names = as.vector(Xs$variable)
+
+    #train.1 <- train[,names] 
+    #type <- train$type
+    #train <- cbind(type,train.1)
+
+
+    selected <- calm[,names] 
+    info = calm[,c(1,2)]
+
+    new_table <- cbind(info,selected)
+    write.table(new_table, row.names = FALSE, "selected_variables.txt", sep="\t", quote = F)' > selected.R
+
+    chmod 755  selected.R
+    ./selected.R
+    rm  selected.R
 
 
     #PCoA based on selected variables
@@ -91,11 +208,11 @@ For zOTUs & KO counts matrices
     sp1<-ggplot(matrix1, aes(x = CAP1, y = CAP2,colour=type)) + geom_point(size =3)
     sp1 + scale_color_manual(values = c("dodgerblue4","lightskyblue3","tomato1", "seagreen3")) + theme_classic()
 
-## Figure 4B
+
 
 ## Figure 4C
-## Figure 4D
-## Figure 4E
+
+
 ## Figure 4F
 
 
