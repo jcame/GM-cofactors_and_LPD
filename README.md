@@ -67,7 +67,29 @@ __________________________
 
 
 __________________________
-## Figure 4A
+## Figure 4A|B|D|E
+
+For zOTUs & KO counts matrices
+    
+    #Varible selection based on RandomForest
+
+
+
+
+    #PCoA based on selected variables
+    
+    library(vegan)
+    library(ggplot2)
+    mod1 <- capscale(X ~ Y$type, dist = "canberra")
+
+    pcs1 <- as.data.frame(mod1$CA$u)
+    pcsA1 <- pcs1[,(1:4)]
+    rda1 = as.data.frame(mod1$CCA$w)
+    rdaA1 = rda1[,(1:2)]
+    matrix1 <- cbind(pcsA1,rdaA1,Y)
+
+    sp1<-ggplot(matrix1, aes(x = CAP1, y = CAP2,colour=type)) + geom_point(size =3)
+    sp1 + scale_color_manual(values = c("dodgerblue4","lightskyblue3","tomato1", "seagreen3")) + theme_classic()
 
 ## Figure 4B
 
