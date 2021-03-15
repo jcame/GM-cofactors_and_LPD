@@ -36,3 +36,25 @@
 
 
 ## Figure 3A
+
+## Figure 3B
+
+## Figure 3C
+    library(ggplot2)
+    library(ggridges)
+    
+    ggplot(matrix1, aes(type,species, color= type)) + geom_boxplot(aes(colour = type)) + geom_jitter(aes(colour = type),width = 0.2) +  scale_color_manual(values=c("dodgerblue4","lightskyblue3","tomato1", "seagreen3")) + theme_classic()
+    
+    ggplot(matrix1, aes(x = species, y = type, fill = type, color = time)) +
+    geom_density_ridges(alpha = 0.7, rel_min_height = 0.01,
+                      color = "white", from =2200, to = 5000) + scale_fill_cyclical(values = c("dodgerblue4","lightskyblue3","tomato1", "seagreen3"),  guide = "legend") + geom_vline(aes(xintercept = 3595), linetype = "dashed") + theme_classic()
+
+
+
+
+
+## Figure 3D
+
+
+
+
