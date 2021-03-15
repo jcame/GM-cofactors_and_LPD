@@ -34,6 +34,7 @@
     library(ggridges)
     ggplot(data, aes(type,Age, color= type)) + geom_boxplot(aes(colour = type)) + geom_jitter(aes(colour = type),width = 0.2) + scale_color_manual(values=c("dodgerblue4","lightskyblue3","tomato1")) + theme_classic()
 
+__________________________
 
 ## Figure 3A
     cor.test(X,Y, method = "spearman")
@@ -63,6 +64,17 @@
     adonis(GMsX ~ GMsY$type, method = "canberra")
     adonis(KOsX ~ GMsY$type, method = "canberra")
 
+
+
+__________________________
+## Figure 4A
+
+## Figure 4B
+
+## Figure 4C
+## Figure 4D
+## Figure 4E
+## Figure 4F
 
 
 
