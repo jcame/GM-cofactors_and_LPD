@@ -264,6 +264,8 @@ KOs (randomForest selected) vs LPDs
 Top variables + RDA components:
 
     library(vegan)
+    library(ggplot2)
+    
     mod01 = rda(X ~ Y$C1, scale =T)
     numbers <- data.frame(mod01$CCA$v)
     numbers <- numbers$RDA1
@@ -299,10 +301,6 @@ Top variables + RDA components:
     Xp = X[,names]
 
 
-
-
-
-
     mod1 = rda(Xp ~ Y$type, scale =T)
     mod1 = capscale(Xp ~ Y$type, distance = "canberra")
 
@@ -321,5 +319,22 @@ Top variables + RDA components:
     sp1 + scale_color_manual(values = c("dodgerblue4","lightskyblue3","tomato1", "seagreen3")) + theme_classic()
 
 
-## Figure 5A
+## Figure 5B
 
+    library(gplots)
+    require(RColorBrewer)
+    
+    heatmap <- heatmap.2(as.matrix(t(X1)), distfun = function(x) dist(x, method = "manhattan"), hclustfun = function(x) hclust(x, method="ward.D"),Rowv = T, Colv = F, dendrogram ="row", col = colorRampPalette(c('white','darkorchid2','darkorchid4','royalblue4','royalblue2', 'cyan4','cyan2','chartreuse1', 'chartreuse2','chartreuse3','chartreuse3','yellow3','orange1', 'orange2','orange3','orange3','coral4'))(2000),
+    key = T, keysize = 1.0, density.info = "none", trace ="none", na.color = NA, margins = c(20,20))
+
+## Figure 5C
+
+    library(ggplot2)
+    sp1<-ggplot(matrix1, aes(x = coveragelog, y = GC, size = size, colour=phyla))
+    sp1 + scale_color_manual(values = c("darkorchid4","orange","tomato", "olivedrab","midnightblue","gray75"))  + theme_classic()  + geom_point(alpha = 0.7) + scale_size(range = c(1, 10))
+
+
+    
+    
+    
+    
