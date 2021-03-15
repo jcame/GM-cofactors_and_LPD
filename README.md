@@ -214,6 +214,11 @@ For zOTUs & KO counts matrices
 
 zOTUs (randomForest selected) vs LPDs
 
+
+    library(Hmisc)
+    library(gplots)
+    library(viridis)
+
     cor <- rcorr(as.matrix(X), as.matrix(Y), type="spearman")
 
     correction <- (p.adjust(cor$P, method = "fdr")) < 0.05
@@ -334,7 +339,76 @@ Top variables + RDA components:
     sp1 + scale_color_manual(values = c("darkorchid4","orange","tomato", "olivedrab","midnightblue","gray75"))  + theme_classic()  + geom_point(alpha = 0.7) + scale_size(range = c(1, 10))
 
 
+## Figure 5D
     
+    Formatting
+    X = read.table('AQUERY_LIST', header =F)
+    Y = read.table('AQUERY_LIST', header =F)
+
+    XX = X$V1
+    YY = Y$V1
+
+    Z = apply(expand.grid(XX, YY), 1, paste, collapse="-")
+    A = Z
+    V1 = Z
+
+    tmp = cbind(A,V1)
+
+    josh = read.table('ANI_results_modified.txt', header =F)
+    D = merge(tmp, josh, all.x=TRUE)
+    Dcopy = D
+    Dcopy[is.na(Dcopy)] <- 50
+    Dfinal = Dcopy[,c(1,5,6,7)]
+
+
+    write.table(Dfinal, "ANI_results_R.txt", col.names =F, sep = "\t", row.names =F, quote =F)
+
+
+
+    ######WITHIN #!/usr/bin/env bash
+
+    TAB=$'\t'
+    cat ANI_results_R.txt | sed 's/-/'"${TAB}"'/g' > ANI_results_R_fixed.txt
+
+    ######WITHIN R
+
+    library(bactaxR)
+    ani <- read.ANI(file = "ANI_results_R_fixed.txt")
+    summary(ani)
+    h <- ANI.histogram(bactaxRObject = ani, bindwidth = 0.02)
+    h
+
+    dend <- ANI.dendrogram(bactaxRObject = ani, ANI_threshold = 95, xline = c(5), xlinecol = c("#ffc425", "#f37735", "deeppink4", "black"), label_size = 0.05)
+
+    dend$cluster_assignments
+    dend$medoid_genomes
+
+    write.table(dend$cluster_assignments, "cluster_assignments_95_ANI.txt", sep = "\t", quote =F)
+    write.table(dend$medoid_genomes, "medoid_genomes_95_ANI.txt", sep = "\t", quote =F)
     
+
+## Figure 5J
     
-    
+    library(Hmisc)
+    library(gplots)
+    library(viridis)
+
+    cor <- rcorr(as.matrix(X), as.matrix(Y), type="spearman")
+
+    correction <- (p.adjust(cor$P, method = "fdr")) < 0.05
+    corrected <- correction
+
+    corrected[corrected==TRUE] = 1
+
+    new <-  corrected*cor$r
+
+    new1 <- new[,-c(1:2)]
+    new2 <- new1[-c(3:11),]
+    cclean <- (colSums(new2, na.rm=T) != 0)
+    new3 <- new2[, cclean]
+    rclean <- (rowSums(new3, na.rm=T) != 0)
+    new4 <- new3[rclean,]
+
+
+    heatmap <- heatmap.2(t(new4), Rowv = T, Colv = T, dendrogram ="both", col = colorRampPalette(c('white','gray90','royalblue2','royalblue4'))(1000), key = T, keysize = 1.0, density.info = "none", trace ="none", na.color = NA, margins = c(8,30))
+
