@@ -259,4 +259,67 @@ KOs (randomForest selected) vs LPDs
 
 
 
+## Figure 5A
+
+Top variables + RDA components:
+
+    library(vegan)
+    mod01 = rda(X ~ Y$C1, scale =T)
+    numbers <- data.frame(mod01$CCA$v)
+    numbers <- numbers$RDA1
+    variable <- colnames(X)
+    RDA1 <- data.frame(cbind(variable, numbers))
+    factors <- abs(as.numeric(as.character(RDA1[,2])))
+    RDA2 <- cbind(RDA1, factors)
+    RDA3 <- RDA2[order(factors),]
+    names1 <- as.vector(tail(RDA3$variable, n= 50L))
+
+    mod02 = rda(X ~ Y$C2, scale =T)
+    numbers <- data.frame(mod02$CCA$v)
+    numbers <- numbers$RDA1
+    variable <- colnames(X)
+    RDA1 <- data.frame(cbind(variable, numbers))
+    factors <- abs(as.numeric(as.character(RDA1[,2])))
+    RDA2 <- cbind(RDA1, factors)
+    RDA3 <- RDA2[order(factors),]
+    names2 <- as.vector(tail(RDA3$variable, n= 50L))
+
+    mod03 = rda(X ~ Y$C3, scale =T)
+    numbers <- data.frame(mod03$CCA$v)
+    numbers <- numbers$RDA1
+    variable <- colnames(X)
+    RDA1 <- data.frame(cbind(variable, numbers))
+    factors <- abs(as.numeric(as.character(RDA1[,2])))
+    RDA2 <- cbind(RDA1, factors)
+    RDA3 <- RDA2[order(factors),]
+    names3 <- as.vector(tail(RDA3$variable, n= 50L))
+
+    tmp1 = c(names1, names2, names3)
+    names = unique(tmp1)
+    Xp = X[,names]
+
+
+
+
+
+
+    mod1 = rda(Xp ~ Y$type, scale =T)
+    mod1 = capscale(Xp ~ Y$type, distance = "canberra")
+
+    pcs1 <- as.data.frame(mod1$CA$u)
+    pcsA1 <- pcs1[,(1:4)]
+    rda1 = as.data.frame(mod1$CCA$w)
+    rdaA1 = rda1[,(1:2)]
+
+    matrix1 <- cbind(pcsA1,rdaA1,Y)
+
+
+    sp1<-ggplot(matrix1, aes(x = PC1, y = PC2,colour=type)) + geom_point(size =3)
+    sp1 + scale_color_manual(values = c("dodgerblue4","lightskyblue3","tomato1", "seagreen3")) + theme_classic()
+
+    sp1<-ggplot(matrix1, aes(x = RDA1, y = RDA2,colour=type)) + geom_point(size =3)
+    sp1 + scale_color_manual(values = c("dodgerblue4","lightskyblue3","tomato1", "seagreen3")) + theme_classic()
+
+
+## Figure 5A
 
