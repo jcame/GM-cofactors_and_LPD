@@ -42,8 +42,6 @@
     library(ggplot2)
     ggplot(matrix1, aes(type,species, color= type)) + geom_boxplot(aes(colour = type)) + geom_jitter(aes(colour = type),width = 0.2) + scale_color_manual(values=c("dodgerblue4","lightskyblue3","tomato1")) + theme_classic()
 
-
-
 ## Figure 3C
     library(ggplot2)
     library(ggridges)
@@ -54,11 +52,10 @@
     geom_density_ridges(alpha = 0.7, rel_min_height = 0.01,
                       color = "white", from =2200, to = 5000) + scale_fill_cyclical(values = c("dodgerblue4","lightskyblue3","tomato1", "seagreen3"),  guide = "legend") + geom_vline(aes(xintercept = 3595), linetype = "dashed") + theme_classic()
 
-
-
 ## Figure 3D
-
-
+    library(ggplot2)
+    library(ggridges)
+    ggplot(C, aes(x=species, fill=cat_BMI)) + geom_density(aes(y = stat(count)),alpha=0.4) + geom_vline(aes(xintercept = 3595), linetype = "dashed") + scale_fill_manual(values=c("gray80", "lightblue", "#E69F00")) + theme_classic()
 
 
 ## Figure 3E
